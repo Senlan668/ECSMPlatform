@@ -1,0 +1,131 @@
+@import url('https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,500;0,600;1,400&family=Inter:wght@400;500;600&display=swap');
+@import "tailwindcss";
+
+/* ── Theme: Light (default) ── */
+:root {
+  --color-page:         #FFFFFF;
+  --color-surface:      #F8F8F7;
+
+  --color-text:         #1A1A1A;
+  --color-text-secondary: #6E6E6E;
+  --color-text-tertiary: #A0A0A0;
+
+  --color-accent:       #2C2C2C;
+  --color-accent-glow:  #444444;
+
+  --color-success:      #2D8A4E;
+  --color-success-muted:#E8F5EC;
+  --color-danger:       #D14343;
+  --color-danger-muted: #FDF0F0;
+
+  --color-border:       #E8E8E6;
+
+  --color-missed:       #FEF0F0;
+  --color-wrong:        #FFF8EB;
+  --color-fuzzy:        #FFFDE8;
+
+  --font-display: 'Lora', Georgia, serif;
+  --font-body:    'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+/* ── Theme: Dark ── */
+[data-theme="dark"] {
+  --color-page:         #000000;
+  --color-surface:      #0D0D0D;
+
+  --color-text:         #EDEDED;
+  --color-text-secondary: #999999;
+  --color-text-tertiary: #666666;
+
+  --color-accent:       #FFFFFF;
+  --color-accent-glow:  #FFFFFF;
+
+  --color-success:      #4ADE80;
+  --color-success-muted:#0F1F15;
+  --color-danger:       #F87171;
+  --color-danger-muted: #1F0F0F;
+
+  --color-border:       #1F1F1F;
+
+  --color-missed:       #1F0F0F;
+  --color-wrong:        #1F1808;
+  --color-fuzzy:        #181F08;
+}
+
+/* ── Tailwind theme ── */
+@theme {
+  --color-page:         var(--color-page);
+  --color-surface:      var(--color-surface);
+  --color-text:         var(--color-text);
+  --color-text-secondary: var(--color-text-secondary);
+  --color-text-tertiary: var(--color-text-tertiary);
+  --color-accent:       var(--color-accent);
+  --color-accent-glow:  var(--color-accent-glow);
+  --color-success:      var(--color-success);
+  --color-success-muted: var(--color-success-muted);
+  --color-danger:       var(--color-danger);
+  --color-danger-muted: var(--color-danger-muted);
+  --color-border:       var(--color-border);
+  --color-missed:       var(--color-missed);
+  --color-wrong:        var(--color-wrong);
+  --color-fuzzy:        var(--color-fuzzy);
+  --font-display: 'Lora', Georgia, serif;
+  --font-body:    'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+/* ── Base ── */
+html {
+  font-family: var(--font-body);
+  background-color: var(--color-page);
+  color: var(--color-text);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+}
+
+
+::selection {
+  background: rgba(0, 0, 0, 0.10);
+  color: var(--color-text);
+}
+
+[data-theme="dark"] ::selection {
+  background: rgba(232, 168, 64, 0.20);
+}
+
+/* ── Scrollbar ── */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--color-border); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: var(--color-text-tertiary); }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+.text-balance { text-wrap: balance; }
+
+/* ── Animations ── */
+@keyframes pulse-soft {
+  0%, 100% { opacity: 0.4; }
+  50%      { opacity: 1.0; }
+}
+.animate-pulse-soft {
+  animation: pulse-soft 1.5s ease-in-out infinite;
+}
+
+@keyframes fade-up {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.animate-enter {
+  animation: fade-up 0.4s ease-out both;
+}

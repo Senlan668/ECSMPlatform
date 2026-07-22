@@ -1,0 +1,54 @@
+# Frontend dependencies and build output
+frontend/node_modules/
+frontend/dist/
+
+# Local planning documents
+/ARCHITECTURE.md
+/电商AI智能运营平台-项目规划.md
+
+# Java and JVM build output
+**/target/
+**/build/
+*.class
+*.jar
+*.war
+*.ear
+.gradle/
+
+# Python environments and generated files
+**/__pycache__/
+*.py[cod]
+*.pyo
+.venv/
+venv/
+env/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+htmlcov/
+.coverage
+
+# Secrets and local configuration
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+*.p12
+*.pfx
+*.jks
+*.keystore
+
+# Runtime files, logs, and local data
+*.log
+logs/
+tmp/
+temp/
+data/local/
+
+# IDE and operating system files
+.idea/
+.vscode/
+*.iml
+.DS_Store
+Thumbs.db
