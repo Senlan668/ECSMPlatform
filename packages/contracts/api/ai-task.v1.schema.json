@@ -1,0 +1,89 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://contracts.shangmeizhiying.local/api/ai-task.v1.schema.json",
+  "title": "AI Task v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "task_id",
+    "task_type",
+    "attempt",
+    "idempotency_key",
+    "tenant_context",
+    "trace",
+    "input_refs",
+    "parameters"
+  ],
+  "properties": {
+    "schema_version": { "const": "ai-task.v1" },
+    "task_id": { "type": "string", "format": "uuid" },
+    "task_type": {
+      "type": "string",
+      "enum": [
+        "media.transcribe",
+        "media.clip-plan",
+        "media.render",
+        "content.topic-plan",
+        "content.draft",
+        "content.visual",
+        "content.platform-adapt",
+        "customer.answer",
+        "customer.voice-turn",
+        "assessment.generate",
+        "assessment.grade",
+        "index.build"
+      ]
+    },
+    "attempt": { "type": "integer", "minimum": 1 },
+    "idempotency_key": { "type": "string", "minLength": 8, "maxLength": 256 },
+    "tenant_context": { "$ref": "#/$defs/tenantContext" },
+    "trace": { "$ref": "#/$defs/traceContext" },
+    "input_refs": {
+      "type": "array",
+      "maxItems": 100,
+      "items": { "$ref": "#/$defs/inputRef" }
+    },
+    "parameters": { "type": "object" },
+    "deadline_at": { "type": "string", "format": "date-time" }
+  },
+  "$defs": {
+    "tenantContext": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["tenant_id", "subject_id", "purpose", "resource_scope"],
+      "properties": {
+        "tenant_id": { "type": "string", "format": "uuid" },
+        "subject_id": { "type": "string", "minLength": 1, "maxLength": 128 },
+        "purpose": { "type": "string", "minLength": 3, "maxLength": 128 },
+        "resource_scope": {
+          "type": "array",
+          "uniqueItems": true,
+          "maxItems": 100,
+          "items": { "type": "string", "minLength": 1, "maxLength": 256 }
+        }
+      }
+    },
+    "traceContext": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["trace_id", "requested_at"],
+      "properties": {
+        "trace_id": { "type": "string", "format": "uuid" },
+        "parent_span_id": { "type": "string", "pattern": "^[0-9a-f]{16}$" },
+        "requested_at": { "type": "string", "format": "date-time" }
+      }
+    },
+    "inputRef": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["kind", "id", "version"],
+      "properties": {
+        "kind": { "type": "string", "minLength": 1, "maxLength": 64 },
+        "id": { "type": "string", "minLength": 1, "maxLength": 128 },
+        "version": { "type": "string", "minLength": 1, "maxLength": 64 },
+        "sha256": { "type": "string", "pattern": "^[0-9a-f]{64}$" }
+      }
+    }
+  }
+}

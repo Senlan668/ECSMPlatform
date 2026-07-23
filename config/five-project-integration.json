@@ -1,0 +1,90 @@
+{
+  "version": 1,
+  "commonExcludedDirectories": [
+    ".git", ".idea", ".vscode", ".venv", "venv", "node_modules", "dist", "build",
+    "coverage", "__pycache__", ".pytest_cache", ".mypy_cache", ".ruff_cache",
+    "test-results", "playwright-report", "blob-report", ".runtime", "logs"
+  ],
+  "commonExcludedExtensions": [
+    ".db", ".dump", ".log", ".mp3", ".mp4", ".p12", ".pem", ".pfx", ".pyc",
+    ".sqlite", ".sqlite3", ".wav", ".zip"
+  ],
+  "projects": [
+    {
+      "id": "live-clip-runtime",
+      "marker": "backend/app/workers/pipeline.py",
+      "target": "ai/media-workers/modules/media-processing/live-clip-runtime",
+      "excludedPrefixes": [],
+      "excludedFiles": ["ai_slice_backup.sql", "backend/ai_slice_dump.sql"],
+      "requiredFiles": [
+        "backend/app/main.py", "backend/app/api/upload.py", "backend/app/api/tasks.py",
+        "backend/app/api/clips.py", "backend/app/workers/pipeline.py", "frontend/src/App.tsx"
+      ]
+    },
+    {
+      "id": "sales-knowledge-runtime",
+      "marker": "AGENTS.md",
+      "target": "ai/runtime/modules/customer-service-ai/sales-knowledge-runtime",
+      "excludedPrefixes": [],
+      "excludedFiles": ["backend/env.example", "docker/initdb/01-data.sql"],
+      "requiredFiles": [
+        "backend/.env.example", "backend/app/main.py", "backend/app/routers/admin.py",
+        "backend/app/routers/knowledge.py", "backend/app/routers/materials.py",
+        "backend/app/routers/quiz.py", "backend/app/routers/export.py", "frontend/src/App.tsx"
+      ]
+    },
+    {
+      "id": "voice-service-runtime",
+      "marker": "rag_llm_server/services/rag_service.py",
+      "target": "ai/runtime/modules/customer-service-ai/voice-service-runtime",
+      "excludedPrefixes": [],
+      "excludedFiles": [],
+      "requiredFiles": [
+        "rag_llm_server/main.py", "rag_llm_server/services/rag_service.py",
+        "rag_llm_server/services/llm_service.py", "src/lib/RtcClient.ts", "src/pages/MainPage/index.tsx"
+      ]
+    },
+    {
+      "id": "content-campaign-runtime",
+      "marker": "app/graph/workflow.py",
+      "target": "ai/runtime/modules/content-ai/content-campaign-runtime",
+      "excludedPrefixes": ["static"],
+      "excludedFiles": ["scripts/test_output.txt"],
+      "requiredFiles": [
+        "app/main.py", "app/graph/workflow.py", "app/api/v1/workflow.py", "app/api/v1/poster.py",
+        "app/api/v1/calendar.py", "app/api/v1/video.py", "app/services/sales_sync_service.py",
+        "video-renderer/src/server.ts", "frontend/src/router.js"
+      ]
+    },
+    {
+      "id": "shared-ai-services",
+      "marker": "mcp-demo/gateway/main.py",
+      "target": "ai/runtime/modules/model-gateway/shared-ai-services",
+      "excludedPrefixes": ["mcp-demo/data/chromadb", "mcp-demo/data/sqlite"],
+      "excludedFiles": [],
+      "requiredFiles": [
+        "mcp-demo/gateway/main.py", "mcp-demo/gateway/router.py", "mcp-demo/gateway/agent_runtime.py",
+        "mcp-demo/shared/llm_gateway/server.py", "mcp-demo/shared/rag_service/server.py",
+        "mcp-demo/shared/memory_service/server.py", "mcp-demo/shared/prompt_hub/server.py",
+        "mcp-demo/projects/customer_service/agent.py", "mcp-demo/projects/writing_assistant/agent.py"
+      ]
+    }
+  ],
+  "platformRequiredFiles": [
+    "backend/ai-business-control/src/main/java/com/shangmei/platform/aibusiness/asset/AssetController.java",
+    "backend/ai-business-control/src/main/java/com/shangmei/platform/aibusiness/campaign/ContentCampaignProxyController.java",
+    "backend/ai-business-control/src/main/java/com/shangmei/platform/aibusiness/knowledge/SalesKnowledgeProxyController.java",
+    "backend/ai-business-control/src/main/java/com/shangmei/platform/aibusiness/customer/CustomerController.java",
+    "backend/ai-business-control/src/main/java/com/shangmei/platform/aibusiness/sharedai/SharedAiServicesController.java",
+    "frontend/src/pages/ContentAssetsPage.tsx",
+    "frontend/src/pages/ContentOperationsPage.tsx",
+    "frontend/src/features/content-campaign/BriefOperationsView.tsx",
+    "frontend/src/features/sales-knowledge/SalesKnowledgeWorkspace.tsx",
+    "frontend/src/features/voice/VoiceWorkspace.tsx",
+    "frontend/src/features/governance/SharedAiServicesPanel.tsx",
+    "config/runtime-manifest.json",
+    "scripts/start-runtimes.ps1",
+    "scripts/stop-runtimes.ps1",
+    "scripts/status-runtimes.ps1"
+  ]
+}

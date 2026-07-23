@@ -1,0 +1,92 @@
+[
+  {
+    "name": "小红书爆款封面",
+    "description": "适合小红书的高质感竖版封面，大标题+副标题布局",
+    "category": "通用",
+    "style_tag": "ins风",
+    "config": {
+      "ai_prompt_template": "为'{title}'主题生成一张小红书风格封面背景：{style_desc}。画面{color_desc}色调，简洁大气，留白得当，适合叠加文字。3:4竖版构图，不要包含任何文字。",
+      "text_slots": [
+        {"name": "title", "label": "主标题", "required": true, "max_length": 20},
+        {"name": "subtitle", "label": "副标题", "required": false, "max_length": 30}
+      ],
+      "color_options": ["暖色调", "冷色调", "莫兰迪色", "黑金色", "清新自然"],
+      "default_aspect_ratio": "3:4"
+    }
+  },
+  {
+    "name": "知识干货卡片",
+    "description": "清新简约的知识分享卡片，适合教程类内容",
+    "category": "知识",
+    "style_tag": "极简商务",
+    "config": {
+      "ai_prompt_template": "生成一张简约知识分享卡片背景：主题是'{title}'。{style_desc}风格，{color_desc}色系，扁平化设计，适合叠加文字信息图。3:4竖版，不含文字。",
+      "text_slots": [
+        {"name": "title", "label": "标题", "required": true, "max_length": 15},
+        {"name": "points", "label": "要点（每行一条）", "required": false, "multiline": true}
+      ],
+      "color_options": ["蓝白色系", "绿白色系", "紫白色系", "橙白色系"],
+      "default_aspect_ratio": "3:4"
+    }
+  },
+  {
+    "name": "美食探店封面",
+    "description": "暖色调食物主题封面，适合美食推荐",
+    "category": "美食",
+    "style_tag": "暖色治愈",
+    "config": {
+      "ai_prompt_template": "生成一张美食主题封面背景：'{title}'。{style_desc}风格，暖色调，诱人的食物相关元素，{color_desc}色系，3:4竖版，适合叠加推荐文字，不含文字。",
+      "text_slots": [
+        {"name": "title", "label": "店名/菜名", "required": true, "max_length": 15},
+        {"name": "subtitle", "label": "推荐语", "required": false, "max_length": 20}
+      ],
+      "color_options": ["暖橙色", "焦糖色", "奶油白", "复古棕"],
+      "default_aspect_ratio": "3:4"
+    }
+  },
+  {
+    "name": "穿搭推荐封面",
+    "description": "时尚简约的穿搭展示封面",
+    "category": "穿搭",
+    "style_tag": "日系清新",
+    "config": {
+      "ai_prompt_template": "生成一张穿搭推荐封面背景：'{title}'。{style_desc}风格，{color_desc}色调，简约时尚，适合展示穿搭搭配的背景，3:4竖版，不含文字。",
+      "text_slots": [
+        {"name": "title", "label": "穿搭主题", "required": true, "max_length": 15},
+        {"name": "subtitle", "label": "风格描述", "required": false, "max_length": 20}
+      ],
+      "color_options": ["米白色", "浅灰色", "奶茶色", "雾霾蓝"],
+      "default_aspect_ratio": "3:4"
+    }
+  },
+  {
+    "name": "公众号横版封面",
+    "description": "适合微信公众号推文的横版封面",
+    "category": "通用",
+    "style_tag": "极简商务",
+    "config": {
+      "ai_prompt_template": "生成一张微信公众号文章封面背景：'{title}'。{style_desc}风格，{color_desc}色调，横版构图(2.35:1比例)，简洁专业，适合叠加标题文字，不含文字。",
+      "text_slots": [
+        {"name": "title", "label": "文章标题", "required": true, "max_length": 30},
+        {"name": "subtitle", "label": "副标题", "required": false, "max_length": 40}
+      ],
+      "color_options": ["深蓝色", "墨绿色", "酒红色", "渐变色"],
+      "default_aspect_ratio": "2.35:1"
+    }
+  },
+  {
+    "name": "抖音竖版封面",
+    "description": "适合抖音/短视频的全屏竖版封面",
+    "category": "通用",
+    "style_tag": "赛博朋克",
+    "config": {
+      "ai_prompt_template": "生成一张短视频封面背景：'{title}'。{style_desc}风格，{color_desc}色调，9:16全屏竖版构图，视觉冲击力强，适合叠加醒目标题，不含文字。",
+      "text_slots": [
+        {"name": "title", "label": "视频标题", "required": true, "max_length": 15},
+        {"name": "subtitle", "label": "副标题", "required": false, "max_length": 20}
+      ],
+      "color_options": ["霓虹色", "暗黑金", "荧光绿", "电光蓝"],
+      "default_aspect_ratio": "9:16"
+    }
+  }
+]

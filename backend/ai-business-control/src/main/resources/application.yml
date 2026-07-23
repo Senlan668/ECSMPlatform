@@ -1,0 +1,36 @@
+server:
+  port: ${AI_BUSINESS_PORT:8081}
+  error:
+    include-message: never
+
+spring:
+  application:
+    name: ai-business-control
+  mvc:
+    async:
+      request-timeout: ${PLATFORM_ASYNC_REQUEST_TIMEOUT:610000}
+  servlet:
+    multipart:
+      max-file-size: ${PLATFORM_MAX_AUDIO_UPLOAD:512MB}
+      max-request-size: ${PLATFORM_MAX_AUDIO_UPLOAD:512MB}
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info
+
+platform:
+  limits:
+    content-campaign-request-bytes: ${CONTENT_CAMPAIGN_MAX_REQUEST_BYTES:33554432}
+  identity:
+    core-base-url: ${CORE_CONTROL_URL:http://127.0.0.1:8080}
+  cors:
+    allowed-origins: ${PLATFORM_CORS_ORIGINS:http://localhost:5173,http://127.0.0.1:5173}
+  runtimes:
+    control-token: ${RUNTIME_CONTROL_TOKEN:}
+    live-clip: ${LIVE_CLIP_RUNTIME_URL:http://127.0.0.1:8101}
+    sales-knowledge: ${SALES_KNOWLEDGE_RUNTIME_URL:http://127.0.0.1:8102}
+    voice: ${VOICE_RUNTIME_URL:http://127.0.0.1:8103}
+    content-campaign: ${CONTENT_CAMPAIGN_RUNTIME_URL:http://127.0.0.1:8104}
+    shared-ai-services: ${MCP_GATEWAY_URL:http://127.0.0.1:8105}

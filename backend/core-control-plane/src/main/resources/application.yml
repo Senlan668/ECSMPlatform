@@ -1,0 +1,20 @@
+server:
+  port: ${CORE_CONTROL_PORT:8080}
+  error:
+    include-message: never
+
+spring:
+  application:
+    name: core-control-plane
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info
+
+platform:
+  auth:
+    session-ttl: ${PLATFORM_SESSION_TTL:PT8H}
+  cors:
+    allowed-origins: ${PLATFORM_CORS_ORIGINS:http://localhost:5173,http://127.0.0.1:5173}

@@ -1,6 +1,6 @@
 # Frontend dependencies and build output
-frontend/node_modules/
-frontend/dist/
+**/node_modules/
+**/dist/
 
 # Local planning documents
 /ARCHITECTURE.md
@@ -19,6 +19,7 @@ frontend/dist/
 **/__pycache__/
 *.py[cod]
 *.pyo
+**/.runtime/
 .venv/
 venv/
 env/
@@ -45,6 +46,9 @@ logs/
 tmp/
 temp/
 data/local/
+*.db
+*.sqlite
+*.sqlite3
 
 # IDE and operating system files
 .idea/
@@ -57,3 +61,6 @@ Thumbs.db
 frontend/test-results/
 frontend/playwright-report/
 frontend/blob-report/
+
+# Transactional source migration staging
+/.migration-staging-*/

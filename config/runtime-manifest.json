@@ -1,0 +1,104 @@
+{
+  "version": 1,
+  "services": [
+    {
+      "id": "core-control-plane",
+      "label": "Core control plane",
+      "workingDirectory": "backend/core-control-plane",
+      "command": ["mvn.cmd", "spring-boot:run"],
+      "port": 8080,
+      "health": "http://127.0.0.1:8080/actuator/health",
+      "environment": {}
+    },
+    {
+      "id": "live-clip-runtime",
+      "label": "Live clip runtime",
+      "workingDirectory": "ai/media-workers/modules/media-processing/live-clip-runtime/backend",
+      "command": [".venv/Scripts/python.exe", "-m", "uvicorn", "app.main:app", "--host", "127.0.0.1", "--port", "8101"],
+      "port": 8101,
+      "health": "http://127.0.0.1:8101/api/health",
+      "environment": {}
+    },
+    {
+      "id": "sales-knowledge-runtime",
+      "label": "Sales knowledge runtime",
+      "workingDirectory": "ai/runtime/modules/customer-service-ai/sales-knowledge-runtime/backend",
+      "command": [".venv/Scripts/python.exe", "-m", "uvicorn", "app.main:app", "--host", "127.0.0.1", "--port", "8102"],
+      "port": 8102,
+      "health": "http://127.0.0.1:8102/health",
+      "environment": {}
+    },
+    {
+      "id": "voice-service-runtime",
+      "label": "Voice service runtime",
+      "workingDirectory": "ai/runtime/modules/customer-service-ai/voice-service-runtime/rag_llm_server",
+      "command": [".venv/Scripts/python.exe", "-m", "uvicorn", "main:app", "--host", "127.0.0.1", "--port", "8103"],
+      "port": 8103,
+      "health": "http://127.0.0.1:8103/health",
+      "environment": {}
+    },
+    {
+      "id": "content-video-renderer",
+      "label": "Content video renderer",
+      "workingDirectory": "ai/runtime/modules/content-ai/content-campaign-runtime/video-renderer",
+      "command": ["npm.cmd", "run", "start"],
+      "port": 3100,
+      "health": "http://127.0.0.1:3100/health",
+      "environment": {
+        "REMOTION_PORT": "3100"
+      }
+    },
+    {
+      "id": "content-campaign-runtime",
+      "label": "Content campaign runtime",
+      "workingDirectory": "ai/runtime/modules/content-ai/content-campaign-runtime",
+      "command": [".venv/Scripts/python.exe", "-m", "uvicorn", "app.main:app", "--host", "127.0.0.1", "--port", "8104"],
+      "port": 8104,
+      "health": "http://127.0.0.1:8104/health",
+      "environment": {
+        "SALES_API_BASE_URL": "http://127.0.0.1:8102",
+        "REMOTION_SERVICE_URL": "http://127.0.0.1:3100"
+      }
+    },
+    {
+      "id": "shared-ai-services",
+      "label": "Shared MCP AI services",
+      "workingDirectory": "ai/runtime/modules/model-gateway/shared-ai-services/mcp-demo",
+      "command": [".venv/Scripts/python.exe", "scripts/start_all.py"],
+      "port": 8105,
+      "health": "http://127.0.0.1:8105/api/health",
+      "environment": {
+        "MCP_GATEWAY_PORT": "8105",
+        "MCP_RAG_STORAGE_MODE": "memory"
+      }
+    },
+    {
+      "id": "ai-business-control",
+      "label": "AI business control plane",
+      "workingDirectory": "backend/ai-business-control",
+      "command": ["mvn.cmd", "spring-boot:run"],
+      "port": 8081,
+      "health": "http://127.0.0.1:8081/actuator/health",
+      "environment": {
+        "CORE_CONTROL_URL": "http://127.0.0.1:8080",
+        "LIVE_CLIP_RUNTIME_URL": "http://127.0.0.1:8101",
+        "SALES_KNOWLEDGE_RUNTIME_URL": "http://127.0.0.1:8102",
+        "VOICE_RUNTIME_URL": "http://127.0.0.1:8103",
+        "CONTENT_CAMPAIGN_RUNTIME_URL": "http://127.0.0.1:8104",
+        "MCP_GATEWAY_URL": "http://127.0.0.1:8105"
+      }
+    },
+    {
+      "id": "frontend",
+      "label": "AIPlatform frontend",
+      "workingDirectory": "frontend",
+      "command": ["npm.cmd", "run", "dev", "--", "--host", "127.0.0.1", "--port", "5173"],
+      "port": 5173,
+      "health": "http://127.0.0.1:5173/",
+      "environment": {
+        "VITE_CORE_CONTROL_URL": "http://127.0.0.1:8080",
+        "VITE_AI_BUSINESS_URL": "http://127.0.0.1:8081"
+      }
+    }
+  ]
+}

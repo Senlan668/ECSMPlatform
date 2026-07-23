@@ -1,0 +1,33 @@
+export const studentFieldLabels = {
+  name: '姓名',
+  channel: '渠道 (来自地区)',
+  city: '城市',
+  education: '学历',
+  graduationCohort: '毕业年份 / 毕业届',
+  phone: '电话',
+  className: '班级',
+  jobTitle: '岗位',
+  preSalary: '来之前薪资',
+  postSalary: '结业薪资',
+  enrollDate: '入学日期',
+  graduationDate: '出师日期 (结业日期)',
+  douyinOrder: '抖音订单号',
+  status: '状态',
+} as const
+
+export const getStudentModalFieldLabels = (): string[] => [
+  studentFieldLabels.name,
+  studentFieldLabels.channel,
+  studentFieldLabels.city,
+  studentFieldLabels.education,
+  studentFieldLabels.graduationCohort,
+  studentFieldLabels.phone,
+  studentFieldLabels.className,
+  studentFieldLabels.jobTitle,
+  studentFieldLabels.preSalary,
+  studentFieldLabels.postSalary,
+  studentFieldLabels.enrollDate,
+  studentFieldLabels.graduationDate,
+  studentFieldLabels.douyinOrder,
+  studentFieldLabels.status,
+]

@@ -1,0 +1,132 @@
+[
+    {
+        "name": "赛博朋克",
+        "name_en": "cyberpunk",
+        "description": "霓虹灯光、暗色调、科技感强烈",
+        "prompt_snippet": "cyberpunk style, neon lights, dark futuristic atmosphere, glowing accents, high contrast",
+        "color_palette": [
+            "#0D0D0D",
+            "#FF00FF",
+            "#00FFFF",
+            "#FF6600"
+        ],
+        "icon": "🌆"
+    },
+    {
+        "name": "日系清新",
+        "name_en": "japanese_fresh",
+        "description": "柔和淡雅、自然光感、温暖治愈",
+        "prompt_snippet": "Japanese aesthetic, soft natural lighting, pastel colors, warm and cozy, minimal and clean",
+        "color_palette": [
+            "#FFF5E6",
+            "#FFD4B2",
+            "#CEEDC7",
+            "#86C8BC"
+        ],
+        "icon": "🌸"
+    },
+    {
+        "name": "极简商务",
+        "name_en": "minimal_business",
+        "description": "简洁专业、大量留白、几何构图",
+        "prompt_snippet": "minimalist business style, clean layout, professional, geometric shapes, ample white space",
+        "color_palette": [
+            "#FFFFFF",
+            "#1A1A2E",
+            "#16213E",
+            "#0F3460"
+        ],
+        "icon": "💼"
+    },
+    {
+        "name": "国潮",
+        "name_en": "chinese_trendy",
+        "description": "中国传统元素+潮流设计、红金配色",
+        "prompt_snippet": "Chinese trendy style (guochao), traditional Chinese elements with modern design, red and gold accents, bold typography",
+        "color_palette": [
+            "#D4001A",
+            "#F5D300",
+            "#1A1A1A",
+            "#FFFFFF"
+        ],
+        "icon": "🏮"
+    },
+    {
+        "name": "ins风",
+        "name_en": "instagram_style",
+        "description": "高级感、滤镜质感、时尚博主风格",
+        "prompt_snippet": "Instagram aesthetic, high-end fashion look, warm filter, lifestyle photography style, curated and polished",
+        "color_palette": [
+            "#F5E6CC",
+            "#D4A574",
+            "#8B7355",
+            "#2C1810"
+        ],
+        "icon": "📸"
+    },
+    {
+        "name": "暖色治愈",
+        "name_en": "warm_healing",
+        "description": "温暖柔和、舒适治愈、奶茶色系",
+        "prompt_snippet": "warm healing aesthetic, soft warm tones, cozy and comforting atmosphere, milk tea colors, gentle lighting",
+        "color_palette": [
+            "#FFF8F0",
+            "#F4DFC8",
+            "#E8C8A0",
+            "#C4A07C"
+        ],
+        "icon": "☕"
+    },
+    {
+        "name": "酸性设计",
+        "name_en": "acid_design",
+        "description": "Y2K风格、荧光色、金属质感、液态效果",
+        "prompt_snippet": "acid design, Y2K aesthetic, fluorescent colors, metallic textures, liquid chrome effects, bold and edgy",
+        "color_palette": [
+            "#C0C0C0",
+            "#FF00FF",
+            "#00FF00",
+            "#FFFF00"
+        ],
+        "icon": "💿"
+    },
+    {
+        "name": "复古胶片",
+        "name_en": "retro_film",
+        "description": "胶片颗粒感、怀旧色调、70-80年代",
+        "prompt_snippet": "retro film aesthetic, vintage film grain, nostalgic color grading, 70s-80s vibe, warm faded tones",
+        "color_palette": [
+            "#8B6914",
+            "#D4A047",
+            "#F5E6CC",
+            "#5C3A1E"
+        ],
+        "icon": "📷"
+    },
+    {
+        "name": "水彩插画",
+        "name_en": "watercolor",
+        "description": "手绘水彩风、柔美艺术感、淡雅",
+        "prompt_snippet": "watercolor illustration style, soft hand-painted look, delicate and artistic, pastel watercolor textures",
+        "color_palette": [
+            "#E8F4FD",
+            "#B8D4E3",
+            "#F5E6CC",
+            "#FFD4D4"
+        ],
+        "icon": "🎨"
+    },
+    {
+        "name": "暗黑高级",
+        "name_en": "dark_luxury",
+        "description": "深色背景、金色点缀、奢华质感",
+        "prompt_snippet": "dark luxury aesthetic, deep black background, gold accents, premium and luxurious feel, elegant and sophisticated",
+        "color_palette": [
+            "#0A0A0A",
+            "#1A1A1A",
+            "#D4AF37",
+            "#F5E6CC"
+        ],
+        "icon": "✨"
+    }
+]
