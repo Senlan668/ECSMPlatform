@@ -1,33 +1,29 @@
-import { Navigate, Routes, Route, useParams } from 'react-router-dom'
+import { Navigate, Outlet, Route, Routes } from 'react-router-dom'
 import SidebarLayout from './components/SidebarLayout'
-import HomePage from './pages/HomePage'
-import LearningSessionPage from './pages/LearningSessionPage'
-import ReviewChatPage from './pages/ReviewChatPage'
-import BatchReviewPage from './pages/BatchReviewPage'
-import AgentChatPage from './pages/AgentChatPage'
-import PrdTestcasePage from './pages/PrdTestcasePage'
+import { useAuth } from './contexts/AuthContext'
+import AiGovernancePage from './pages/AiGovernancePage'
+import LoginPage from './pages/LoginPage'
+import RegisterPage from './pages/RegisterPage'
+import PlatformOverviewPage from './pages/PlatformOverviewPage'
+import ProjectWorkspacePage from './pages/ProjectWorkspacePage'
 
-function LegacySessionRedirect({ review = false }: { review?: boolean }) {
-  const { sessionId } = useParams<{ sessionId: string }>()
-  return <Navigate to={`/study/${review ? 'review' : 'session'}/${sessionId || ''}`} replace />
+function RequireAuth() {
+  const { isAuthenticated } = useAuth()
+  return isAuthenticated ? <Outlet /> : <Navigate to="/login" replace />
 }
 
 export default function App() {
   return (
     <Routes>
-      <Route element={<SidebarLayout />}>
-        <Route index element={<AgentChatPage mode="general" />} />
-        <Route path="agent/:conversationId" element={<AgentChatPage mode="general" />} />
-        <Route path="deep-think" element={<AgentChatPage mode="deep" />} />
-        <Route path="deep-think/:conversationId" element={<AgentChatPage mode="deep" />} />
-        <Route path="tools/prd-testcases" element={<PrdTestcasePage />} />
-        <Route path="study" element={<HomePage />} />
-        <Route path="study/session/:sessionId" element={<LearningSessionPage />} />
-        <Route path="study/review/:sessionId" element={<ReviewChatPage />} />
-        <Route path="study/review/batch" element={<BatchReviewPage />} />
-        <Route path="session/:sessionId" element={<LegacySessionRedirect />} />
-        <Route path="review/:sessionId" element={<LegacySessionRedirect review />} />
-        <Route path="review/batch" element={<Navigate to="/study/review/batch" replace />} />
+      <Route path="login" element={<LoginPage />} />
+      <Route path="register" element={<RegisterPage />} />
+      <Route element={<RequireAuth />}>
+        <Route element={<SidebarLayout />}>
+          <Route index element={<PlatformOverviewPage />} />
+          <Route path="projects/ai-governance" element={<AiGovernancePage />} />
+          <Route path="projects/:projectId" element={<ProjectWorkspacePage />} />
+          <Route path="*" element={<Navigate to="/" replace />} />
+        </Route>
       </Route>
     </Routes>
   )
