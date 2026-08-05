@@ -17,6 +17,7 @@ import java.time.Duration;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Base64;
+import java.util.Collections;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Locale;
@@ -41,9 +42,14 @@ public class IdentityService {
     private final SecureRandom secureRandom = new SecureRandom();
     private final Duration sessionTtl;
 
-    public IdentityService(@Value("${platform.auth.session-ttl:PT8H}") Duration sessionTtl) {
+    public IdentityService(
+            @Value("${platform.auth.session-ttl:PT8H}") Duration sessionTtl,
+            @Value("${platform.auth.dev-seed.enabled:false}") boolean developmentSeedEnabled
+    ) {
         this.sessionTtl = sessionTtl;
-        seedDevelopmentIdentity();
+        if (developmentSeedEnabled) {
+            seedDevelopmentIdentity();
+        }
     }
 
     public SessionResponse login(String username, String password, String requestedTenantId) {
@@ -182,8 +188,8 @@ public class IdentityService {
         tenants.put(media.id(), media);
 
         User admin = new User("user:admin", "管理员", "admin");
-        Set<String> tenantIds = new LinkedHashSet<>(List.of(commerce.id(), media.id()));
-        accounts.put("admin", new Account(passwordEncoder.encode("123"), admin, Set.copyOf(tenantIds)));
+        Set<String> tenantIds = Collections.unmodifiableSet(new LinkedHashSet<>(List.of(commerce.id(), media.id())));
+        accounts.put("admin", new Account(passwordEncoder.encode("123"), admin, tenantIds));
         Member member = new Member(admin.id(), admin.username(), admin.name(), "owner");
         membersByTenant.put(commerce.id(), List.of(member));
         membersByTenant.put(media.id(), List.of(member));

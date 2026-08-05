@@ -16,5 +16,7 @@ management:
 platform:
   auth:
     session-ttl: ${PLATFORM_SESSION_TTL:PT8H}
+    dev-seed:
+      enabled: ${PLATFORM_AUTH_DEV_SEED_ENABLED:false}
   cors:
     allowed-origins: ${PLATFORM_CORS_ORIGINS:http://localhost:5173,http://127.0.0.1:5173}

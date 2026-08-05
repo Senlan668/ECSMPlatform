@@ -55,6 +55,18 @@ try {
         $environmentBackup = @{}
         $environment = @{'RUNTIME_CONTROL_TOKEN' = $token; 'PYTHONUTF8' = '1'; 'PYTHONIOENCODING' = 'utf-8'}
         foreach ($property in $item.environment.PSObject.Properties) { $environment[$property.Name] = [string]$property.Value }
+        $privateEnvironmentPath = Join-Path $script:RuntimeRoot "env\$($item.id).env"
+        if (Test-Path -LiteralPath $privateEnvironmentPath) {
+            foreach ($line in Get-Content -LiteralPath $privateEnvironmentPath -Encoding UTF8) {
+                $trimmed = $line.Trim()
+                if (-not $trimmed -or $trimmed.StartsWith('#')) { continue }
+                $parts = $trimmed.Split('=', 2)
+                if ($parts.Count -ne 2 -or $parts[0] -notmatch '^[A-Za-z_][A-Za-z0-9_]*$') {
+                    throw "Invalid environment entry in $privateEnvironmentPath"
+                }
+                $environment[$parts[0]] = $parts[1]
+            }
+        }
         foreach ($name in $environment.Keys) {
             $environmentBackup[$name] = [Environment]::GetEnvironmentVariable($name, 'Process')
             [Environment]::SetEnvironmentVariable($name, $environment[$name], 'Process')

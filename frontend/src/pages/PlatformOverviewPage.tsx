@@ -10,7 +10,7 @@ export default function PlatformOverviewPage() {
         <div className="max-w-2xl animate-enter">
           <div className="flex items-center gap-2 text-xs text-text-tertiary"><Layers3 size={14} /> 商媒智营平台</div>
           <h1 className="mt-4 font-display text-3xl md:text-4xl font-medium text-text">平台架构总览</h1>
-          <p className="mt-3 text-sm leading-7 text-text-secondary">电商与自媒体 AI 智能运营平台。八个业务领域以明确的数据所有权协作，后续按业务闭环逐步建设。</p>
+          <p className="mt-3 text-sm leading-7 text-text-secondary">电商与自媒体 AI 智能运营平台。九个业务领域以明确的数据所有权协作，后续按业务闭环逐步建设。</p>
         </div>
 
         <section className="mt-10 border-y border-border" aria-label="平台项目列表">

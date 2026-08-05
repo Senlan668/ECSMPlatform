@@ -48,7 +48,9 @@ function Resolve-ServiceExecutable($Service) {
 function Test-ServiceHealth($Service, [int]$TimeoutSeconds = 2) {
     try {
         $response = Invoke-WebRequest -UseBasicParsing -Uri $Service.health -TimeoutSec $TimeoutSeconds
-        return $response.StatusCode -ge 200 -and $response.StatusCode -lt 500
+        # A reachable endpoint is not necessarily a ready service. In particular,
+        # authentication and configuration failures must not be registered as healthy.
+        return $response.StatusCode -ge 200 -and $response.StatusCode -lt 300
     } catch {
         return $false
     }

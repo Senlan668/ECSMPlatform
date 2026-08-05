@@ -1,15 +1,27 @@
+import { lazy, Suspense, type ReactNode } from 'react'
 import { Navigate, Outlet, Route, Routes } from 'react-router-dom'
 import SidebarLayout from './components/SidebarLayout'
+import Spinner from './components/Spinner'
 import { useAuth } from './contexts/AuthContext'
-import AiGovernancePage from './pages/AiGovernancePage'
-import AnalyticsPage from './pages/AnalyticsPage'
-import ContentAssetsPage from './pages/ContentAssetsPage'
-import ContentOperationsPage from './pages/ContentOperationsPage'
-import CustomerServicePage from './pages/CustomerServicePage'
 import LoginPage from './pages/LoginPage'
 import RegisterPage from './pages/RegisterPage'
 import PlatformOverviewPage from './pages/PlatformOverviewPage'
 import ProjectWorkspacePage from './pages/ProjectWorkspacePage'
+
+const AiGovernancePage = lazy(() => import('./pages/AiGovernancePage'))
+const AgentWorkspacePage = lazy(() => import('./pages/AgentWorkspacePage'))
+const AnalyticsPage = lazy(() => import('./pages/AnalyticsPage'))
+const ContentAssetsPage = lazy(() => import('./pages/ContentAssetsPage'))
+const ContentOperationsPage = lazy(() => import('./pages/ContentOperationsPage'))
+const CustomerServicePage = lazy(() => import('./pages/CustomerServicePage'))
+
+function WorkspaceRoute({ children }: { children: ReactNode }) {
+  return (
+    <Suspense fallback={<div className="flex min-h-full items-center justify-center" aria-label="正在加载工作台"><Spinner size="lg" /></div>}>
+      {children}
+    </Suspense>
+  )
+}
 
 function RequireAuth() {
   const { isAuthenticated, isReady } = useAuth()
@@ -25,11 +37,12 @@ export default function App() {
       <Route element={<RequireAuth />}>
         <Route element={<SidebarLayout />}>
           <Route index element={<PlatformOverviewPage />} />
-          <Route path="projects/content-assets" element={<ContentAssetsPage />} />
-          <Route path="projects/content-operations" element={<ContentOperationsPage />} />
-          <Route path="projects/customer-service" element={<CustomerServicePage />} />
-          <Route path="projects/analytics" element={<AnalyticsPage />} />
-          <Route path="projects/ai-governance" element={<AiGovernancePage />} />
+          <Route path="projects/content-assets" element={<WorkspaceRoute><ContentAssetsPage /></WorkspaceRoute>} />
+          <Route path="projects/content-operations" element={<WorkspaceRoute><ContentOperationsPage /></WorkspaceRoute>} />
+          <Route path="projects/customer-service" element={<WorkspaceRoute><CustomerServicePage /></WorkspaceRoute>} />
+          <Route path="projects/analytics" element={<WorkspaceRoute><AnalyticsPage /></WorkspaceRoute>} />
+          <Route path="projects/ai-governance" element={<WorkspaceRoute><AiGovernancePage /></WorkspaceRoute>} />
+          <Route path="projects/agent-workspace" element={<WorkspaceRoute><AgentWorkspacePage /></WorkspaceRoute>} />
           <Route path="projects/:projectId" element={<ProjectWorkspacePage />} />
           <Route path="*" element={<Navigate to="/" replace />} />
         </Route>

@@ -34,3 +34,4 @@ platform:
     voice: ${VOICE_RUNTIME_URL:http://127.0.0.1:8103}
     content-campaign: ${CONTENT_CAMPAIGN_RUNTIME_URL:http://127.0.0.1:8104}
     shared-ai-services: ${MCP_GATEWAY_URL:http://127.0.0.1:8105}
+    dodo-agent: ${DODO_AGENT_RUNTIME_URL:http://127.0.0.1:8106}

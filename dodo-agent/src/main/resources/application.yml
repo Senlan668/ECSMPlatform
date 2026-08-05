@@ -1,0 +1,89 @@
+server:
+  port: ${DODO_AGENT_PORT:8106}
+  servlet:
+    encoding:
+      charset: UTF-8
+      force: true
+      enabled: true
+
+spring:
+  application:
+    name: dodo-agent-runtime
+  main:
+    lazy-initialization: true
+  ai:
+    openai:
+      api-key: ${DODO_OPENAI_API_KEY:local-development-placeholder}
+      base-url: ${DODO_OPENAI_BASE_URL:https://dashscope.aliyuncs.com/compatible-mode/}
+      chat:
+        options:
+          model: ${DODO_CHAT_MODEL:qwen-plus}
+          temperature: ${DODO_CHAT_TEMPERATURE:0.7}
+          max-tokens: ${DODO_CHAT_MAX_TOKENS:5000}
+      embedding:
+        base-url: ${DODO_EMBEDDING_BASE_URL:${DODO_OPENAI_BASE_URL:https://dashscope.aliyuncs.com/compatible-mode/}}
+        api-key: ${DODO_EMBEDDING_API_KEY:${DODO_OPENAI_API_KEY:local-development-placeholder}}
+        options:
+          model: ${DODO_EMBEDDING_MODEL:text-embedding-v4}
+          dimensions: ${DODO_EMBEDDING_DIMENSIONS:1024}
+  datasource:
+    url: ${DODO_MYSQL_URL:jdbc:mysql://127.0.0.1:3306/dodo?useUnicode=true&characterEncoding=utf8&useSSL=false&serverTimezone=GMT%2B8}
+    username: ${DODO_MYSQL_USERNAME:root}
+    password: ${DODO_MYSQL_PASSWORD:}
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    hikari:
+      minimum-idle: ${DODO_MYSQL_MIN_IDLE:1}
+      maximum-pool-size: ${DODO_MYSQL_MAX_POOL_SIZE:10}
+      idle-timeout: 60000
+      connection-timeout: 3000
+      max-lifetime: 1800000
+  servlet:
+    multipart:
+      enabled: true
+      max-file-size: 50MB
+      max-request-size: 50MB
+
+mybatis-plus:
+  mapper-locations: classpath:mapper/*.xml
+
+minio:
+  endpoint: ${DODO_MINIO_ENDPOINT:http://127.0.0.1:9000}
+  access-key: ${DODO_MINIO_ACCESS_KEY:minioadmin}
+  secret-key: ${DODO_MINIO_SECRET_KEY:minioadmin}
+  bucketName: ${DODO_MINIO_BUCKET:dodo-agent}
+
+embeddings:
+  store:
+    host: ${DODO_PGVECTOR_HOST:127.0.0.1}
+    port: ${DODO_PGVECTOR_PORT:5432}
+    database: ${DODO_PGVECTOR_DATABASE:vector_store}
+    user: ${DODO_PGVECTOR_USER:postgres}
+    password: ${DODO_PGVECTOR_PASSWORD:}
+
+tavily:
+  api-key: ${DODO_TAVILY_API_KEY:}
+  mcp-url: ${DODO_TAVILY_MCP_URL:https://mcp.tavily.com/mcp/}
+
+grsai:
+  nanobanana:
+    api-key: ${DODO_IMAGE_API_KEY:}
+
+platform:
+  features:
+    pgvector-enabled: ${DODO_PGVECTOR_ENABLED:false}
+  runtime:
+    control-token: ${RUNTIME_CONTROL_TOKEN:}
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info
+  health:
+    db:
+      enabled: false
+
+logging:
+  level:
+    org.springframework.ai: INFO
+    io.modelcontextprotocol.client: ERROR

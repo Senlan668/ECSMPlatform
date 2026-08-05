@@ -1,5 +1,5 @@
 import type { LucideIcon } from 'lucide-react'
-import { BarChart3, BrainCircuit, Boxes, Cable, FileStack, Headphones, ShieldCheck, Sparkles } from 'lucide-react'
+import { BarChart3, BrainCircuit, Boxes, Cable, FileStack, Headphones, MessageCircle, ShieldCheck, Sparkles } from 'lucide-react'
 
 export type ProjectGroup = '基础平台' | '运营中心' | '智能与分析'
 export type ProjectStatus = '待配置'
@@ -51,6 +51,9 @@ export const platformProjects: PlatformProject[] = [
   },
   {
     id: 'ai-governance', number: '项目八', group: '智能与分析', name: 'AI 模型与服务中心', shortName: '模型与服务', description: '管理模型、服务密钥、Prompt 版本、工具目录、调用路由、评测、追踪、用量与成本。', ownership: '模型配置、Prompt、工具策略、AI Trace、索引投影、评测与用量', deployment: 'Python AI Runtime + Java 治理控制', status: '待配置', icon: BrainCircuit, capabilities: ['模型网关', 'Prompt 版本', 'HTTP / MCP 工具', 'RAG 与索引', '成本治理'], initialMetrics: [{ label: '模型', detail: '等待添加模型' }, { label: 'API Key', detail: '等待创建密钥' }, { label: '运行调用', detail: '暂无调用记录' }], initializationSteps: ['添加并启动第一个模型', '创建服务 API Key', '配置 Prompt、工具路由与预算策略'],
+  },
+  {
+    id: 'agent-workspace', number: '项目九', group: '智能与分析', name: '蓝鲲通用智能体', shortName: '蓝鲲', description: '统一承载联网问答、文件问答、演示文稿生成与深度研究会话。', ownership: 'Agent 会话、任务执行、引用来源、文件上下文与生成结果', deployment: 'Java AI 业务控制面 + Spring AI Runtime', status: '待配置', icon: MessageCircle, capabilities: ['联网问答', '文件 RAG', 'PPT 生成', '深度研究'], initialMetrics: [{ label: '会话', detail: '等待发起对话' }, { label: '运行任务', detail: '暂无执行任务' }, { label: '文件上下文', detail: '尚未上传文件' }], initializationSteps: ['配置模型与搜索服务', '创建第一条 Agent 会话', '按需接入文件与演示模板'],
   },
 ]
 

@@ -7,6 +7,11 @@ interface ApiErrorBody {
   code?: string
 }
 
+export interface BusinessAuth {
+  accessToken: string
+  tenantId: string
+}
+
 export class ApiError extends Error {
   readonly status: number
   readonly code?: string
@@ -44,31 +49,37 @@ async function assertResponse(response: Response) {
   throw new ApiError(body.detail || body.error || `请求失败 (${response.status})`, response.status, body.code)
 }
 
-function withJsonHeaders(init: RequestInit | undefined, extraHeaders?: HeadersInit) {
+function withJsonHeaders(init?: RequestInit, extraHeaders?: HeadersInit) {
   const headers = new Headers(init?.headers)
   if (init?.body !== undefined && !(init.body instanceof FormData)) headers.set('Content-Type', 'application/json')
   new Headers(extraHeaders).forEach((value, key) => headers.set(key, value))
   return headers
 }
 
-export async function coreRequest<T>(path: string, init?: RequestInit, accessToken?: string): Promise<T> {
-  const headers = withJsonHeaders(init, accessToken ? { Authorization: `Bearer ${accessToken}` } : undefined)
-  const response = await fetch(`${CORE_CONTROL_URL}${path}`, { ...init, headers })
-  return parseResponse<T>(response)
+async function requestResponse(baseUrl: string, path: string, init?: RequestInit, headers?: HeadersInit) {
+  return fetch(`${baseUrl}${path}`, { ...init, headers: withJsonHeaders(init, headers) })
 }
 
-export async function businessRequest<T>(
-  path: string,
-  auth: { accessToken: string; tenantId: string },
-  init?: RequestInit,
-): Promise<T> {
-  const headers = withJsonHeaders(init, {
+function businessHeaders(auth: BusinessAuth, extraHeaders?: HeadersInit) {
+  const headers = new Headers({
     Authorization: `Bearer ${auth.accessToken}`,
     'X-Tenant-Id': auth.tenantId,
     'X-Trace-Id': crypto.randomUUID(),
   })
-  const response = await fetch(`${AI_BUSINESS_URL}${path}`, { ...init, headers })
-  return parseResponse<T>(response)
+  new Headers(extraHeaders).forEach((value, key) => headers.set(key, value))
+  return headers
+}
+
+export async function coreRequest<T>(path: string, init?: RequestInit, accessToken?: string): Promise<T> {
+  return parseResponse<T>(await requestResponse(CORE_CONTROL_URL, path, init, accessToken ? { Authorization: `Bearer ${accessToken}` } : undefined))
+}
+
+export async function businessRequest<T>(
+  path: string,
+  auth: BusinessAuth,
+  init?: RequestInit,
+): Promise<T> {
+  return parseResponse<T>(await requestResponse(AI_BUSINESS_URL, path, init, businessHeaders(auth)))
 }
 
 export interface BusinessDownload {
@@ -87,30 +98,19 @@ function downloadFilename(response: Response) {
 
 export async function businessBlobRequest(
   path: string,
-  auth: { accessToken: string; tenantId: string },
+  auth: BusinessAuth,
   init?: RequestInit,
 ): Promise<BusinessDownload> {
-  const headers = withJsonHeaders(init, {
-    Authorization: `Bearer ${auth.accessToken}`,
-    'X-Tenant-Id': auth.tenantId,
-    'X-Trace-Id': crypto.randomUUID(),
-  })
-  const response = await assertResponse(await fetch(`${AI_BUSINESS_URL}${path}`, { ...init, headers }))
+  const response = await assertResponse(await requestResponse(AI_BUSINESS_URL, path, init, businessHeaders(auth)))
   return { blob: await response.blob(), filename: downloadFilename(response) }
 }
 
 export async function businessStreamRequest(
   path: string,
-  auth: { accessToken: string; tenantId: string },
+  auth: BusinessAuth,
   init?: RequestInit,
 ): Promise<Response> {
-  const headers = withJsonHeaders(init, {
-    Authorization: `Bearer ${auth.accessToken}`,
-    'X-Tenant-Id': auth.tenantId,
-    'X-Trace-Id': crypto.randomUUID(),
-    Accept: 'text/event-stream',
-  })
-  return assertResponse(await fetch(`${AI_BUSINESS_URL}${path}`, { ...init, headers }))
+  return assertResponse(await requestResponse(AI_BUSINESS_URL, path, init, businessHeaders(auth, { Accept: 'text/event-stream' })))
 }
 
 export function jsonRequest(method: string, body?: unknown): RequestInit {

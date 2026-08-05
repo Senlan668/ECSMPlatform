@@ -83,27 +83,156 @@ async function createBrowserTestVideo(page: Page): Promise<Buffer> {
   return Buffer.from(base64, 'base64')
 }
 
-test('登录后展示八个项目并可进入项目工作区', async ({ page }) => {
+test('登录后展示平台项目并可进入项目工作区', async ({ page }) => {
   await signIn(page)
 
   await expect(page.getByRole('heading', { name: '平台架构总览' })).toBeVisible()
-  await expect(page.getByRole('navigation', { name: '项目导航' })).toBeVisible()
-  await expect(page.getByLabel('项目导航').getByRole('button', { name: '模型与服务' })).toBeVisible()
+  const projectNavigation = page.getByRole('navigation', { name: '项目导航' })
+  await expect(projectNavigation).toBeVisible()
+  await expect(projectNavigation.getByRole('button').nth(0)).toHaveText('平台总览')
+  await expect(projectNavigation.getByRole('button').nth(1)).toHaveText('蓝鲲')
+  await expect(projectNavigation.getByRole('button', { name: '模型与服务' })).toBeVisible()
   await page.locator('section[aria-label="平台项目列表"]').getByRole('button', { name: /内容与营销运营/ }).click()
   await expect(page).toHaveURL('/projects/content-operations')
   await expect(page.getByRole('heading', { name: '内容与营销运营' })).toBeVisible()
 })
 
-test('八个项目入口均受登录保护且可访问', async ({ page }) => {
+test('所有项目入口均受登录保护且可访问', async ({ page }) => {
   await page.goto('/projects/identity-access')
   await expect(page).toHaveURL('/login')
   await signIn(page)
 
-  const projectIds = ['identity-access', 'channel-integration', 'commerce-core', 'content-assets', 'content-operations', 'customer-service', 'analytics', 'ai-governance']
+  const projectIds = ['identity-access', 'channel-integration', 'commerce-core', 'content-assets', 'content-operations', 'customer-service', 'analytics', 'ai-governance', 'agent-workspace']
   for (const id of projectIds) {
     await page.goto(`/projects/${id}`)
     await expect(page.getByRole('heading', { level: 1 })).toBeVisible()
   }
+})
+
+test('蓝鲲会话记录在侧栏可滚动展开并按租户持久化', async ({ page, isMobile }) => {
+  await signIn(page)
+  await page.goto('/projects/agent-workspace')
+
+  const now = Date.now()
+  const conversations = Array.from({ length: 30 }, (_, index) => {
+    const timestamp = new Date(now - index * 60_000).toISOString()
+    return {
+      id: `e2e-conversation-${index}`,
+      title: `历史会话 ${String(index + 1).padStart(2, '0')}`,
+      mode: 'chat',
+      messages: [],
+      createdAt: timestamp,
+      updatedAt: timestamp,
+    }
+  })
+  await page.evaluate(value => {
+    localStorage.setItem('aiplatform-agent-conversations:senlan-commerce', JSON.stringify({
+      key: 'aiplatform-agent-conversations:senlan-commerce',
+      activeId: value[0].id,
+      conversations: value,
+    }))
+  }, conversations)
+  await page.reload()
+
+  if (isMobile) await page.getByRole('button', { name: '打开侧边栏' }).click()
+
+  const blueKunTab = page.getByRole('button', { name: '蓝鲲', exact: true })
+  const conversationPanel = page.getByRole('region', { name: '蓝鲲会话' })
+  await expect(blueKunTab).toHaveAttribute('aria-expanded', 'true')
+  await expect(conversationPanel).toBeVisible()
+  await expect(page.getByRole('tab', { name: /会话记录，当前会话：/ })).toHaveCount(0)
+
+  const conversationList = page.getByRole('listbox', { name: '会话记录' })
+  await expect(conversationList.getByRole('option')).toHaveCount(30)
+  await expect(conversationList).toHaveCSS('overflow-y', 'auto')
+  const scrollMetrics = await conversationList.evaluate(element => ({
+    clientHeight: element.clientHeight,
+    scrollHeight: element.scrollHeight,
+  }))
+  expect(scrollMetrics.scrollHeight).toBeGreaterThan(scrollMetrics.clientHeight)
+
+  const accountFooter = page.getByTestId('sidebar-account-footer')
+  const [panelBox, footerBox] = await Promise.all([
+    conversationPanel.boundingBox(),
+    accountFooter.boundingBox(),
+  ])
+  expect(panelBox).not.toBeNull()
+  expect(footerBox).not.toBeNull()
+  expect(Math.abs((panelBox?.y || 0) + (panelBox?.height || 0) - (footerBox?.y || 0))).toBeLessThanOrEqual(1)
+  const hasGlobalOverflow = await page.evaluate(() => document.documentElement.scrollWidth > window.innerWidth + 1)
+  expect(hasGlobalOverflow).toBe(false)
+
+  await blueKunTab.click()
+  await expect(blueKunTab).toHaveAttribute('aria-expanded', 'false')
+  await expect(conversationPanel).toHaveCount(0)
+  await blueKunTab.click()
+  await expect(blueKunTab).toHaveAttribute('aria-expanded', 'true')
+
+  await conversationList.getByRole('option', { name: '切换到会话 历史会话 20' }).click()
+  await expect(page.locator('[aria-label="当前会话：历史会话 20"]')).toBeVisible()
+  await expect.poll(() => page.evaluate(() => {
+    const raw = localStorage.getItem('aiplatform-agent-conversations:senlan-commerce')
+    return raw ? JSON.parse(raw).activeId : null
+  })).toBe('e2e-conversation-19')
+
+  await page.reload()
+  await expect(page.locator('[aria-label="当前会话：历史会话 20"]')).toBeVisible()
+})
+
+test('蓝鲲默认使用问题模式并仅在操作后切换创作模式', async ({ page }) => {
+  await signIn(page)
+  await page.goto('/projects/agent-workspace')
+
+  const questionMode = page.getByRole('button', { name: '问题模式' })
+  const uploadFile = page.getByRole('button', { name: '上传文件' })
+  const pptMode = page.getByRole('button', { name: 'PPT 创作' })
+  const deepMode = page.getByRole('button', { name: '深度研究' })
+  const composer = page.getByRole('textbox', { name: '消息' })
+
+  await expect(questionMode).toHaveAttribute('aria-pressed', 'true')
+  await expect(uploadFile).toHaveAttribute('aria-pressed', 'false')
+  await expect(pptMode).toHaveAttribute('aria-pressed', 'false')
+  await expect(deepMode).toHaveAttribute('aria-pressed', 'false')
+  await expect(composer).toHaveAttribute('placeholder', '输入问题')
+  await expect(page.getByRole('tab', { name: 'PPT' })).toHaveCount(0)
+  await expect(page.getByRole('tab', { name: '深度研究' })).toHaveCount(0)
+
+  await pptMode.click()
+  await expect(pptMode).toHaveAttribute('aria-pressed', 'true')
+  await expect(questionMode).toHaveAttribute('aria-pressed', 'false')
+  await expect(composer).toHaveAttribute('placeholder', '描述要创作的 PPT')
+
+  await deepMode.click()
+  await expect(deepMode).toHaveAttribute('aria-pressed', 'true')
+  await expect(pptMode).toHaveAttribute('aria-pressed', 'false')
+  await expect(composer).toHaveAttribute('placeholder', '输入需要深度研究的主题')
+
+  await questionMode.click()
+  await expect(questionMode).toHaveAttribute('aria-pressed', 'true')
+
+  await page.route('**/api/v1/agent/files', async route => {
+    await route.fulfill({
+      status: 200,
+      contentType: 'application/json',
+      body: JSON.stringify({
+        data: { fileId: 'senlan-commerce.e2e-file', fileName: '产品资料.txt', fileSize: 12 },
+      }),
+    })
+  })
+  await page.getByLabel('选择文件').setInputFiles({
+    name: '产品资料.txt',
+    mimeType: 'text/plain',
+    buffer: Buffer.from('product info'),
+  })
+  await expect(uploadFile).toHaveAttribute('aria-pressed', 'true')
+  await expect(questionMode).toHaveAttribute('aria-pressed', 'false')
+  await expect(composer).toHaveAttribute('placeholder', '围绕文件提问')
+  await expect(page.getByText('产品资料.txt', { exact: true })).toBeVisible()
+
+  await page.getByRole('button', { name: '移除文件' }).click()
+  await expect(questionMode).toHaveAttribute('aria-pressed', 'true')
+  await expect(uploadFile).toHaveAttribute('aria-pressed', 'false')
+  await expect(composer).toHaveAttribute('placeholder', '输入问题')
 })
 
 test('用户菜单提供租户切换，模型服务中心可从项目导航进入', async ({ page, isMobile }, testInfo) => {
@@ -231,7 +360,7 @@ test('客服在 AI 依赖缺失时明确降级到人工接管', async ({ page })
   await expect(page.getByText('我先为您核对商品与订单规则。', { exact: true })).toBeVisible()
 })
 
-test('销售知识八个工作台可访问且保持响应式布局', async ({ page }, testInfo) => {
+test('销售知识九个工作台可访问且保持响应式布局', async ({ page }, testInfo) => {
   await signIn(page)
   await page.goto('/projects/customer-service')
   await page.getByRole('tab', { name: '销售知识' }).click()

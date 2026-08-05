@@ -42,7 +42,8 @@ public class RuntimeRegistryService {
             @Value("${platform.runtimes.sales-knowledge}") String salesKnowledgeUrl,
             @Value("${platform.runtimes.voice}") String voiceUrl,
             @Value("${platform.runtimes.content-campaign}") String contentCampaignUrl,
-            @Value("${platform.runtimes.shared-ai-services}") String sharedAiServicesUrl
+            @Value("${platform.runtimes.shared-ai-services}") String sharedAiServicesUrl,
+            @Value("${platform.runtimes.dodo-agent}") String dodoAgentUrl
     ) {
         this.objectMapper = objectMapper;
         this.httpClient = HttpClient.newBuilder()
@@ -69,6 +70,10 @@ public class RuntimeRegistryService {
         add(configured, new RuntimeDescriptor(
                 "shared-ai-services", "共享 AI 服务集群", "Python / MCP", trimSlash(sharedAiServicesUrl), "/api/health",
                 List.of("LLM 网关", "RAG 服务", "共享记忆", "Prompt Hub", "认证", "配额", "Trace")
+        ));
+        add(configured, new RuntimeDescriptor(
+                "dodo-agent", "蓝鲲通用智能体运行时", "Java / Spring AI", trimSlash(dodoAgentUrl), "/api/health",
+                List.of("联网问答", "文件 RAG", "PPT 生成", "深度研究", "SSE 流式响应")
         ));
         this.runtimes = Map.copyOf(configured);
     }
